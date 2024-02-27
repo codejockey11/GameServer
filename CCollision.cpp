@@ -45,8 +45,8 @@ bool CCollision::GroundCollision()
 	}
 
 	// Grab the collision list for the cube where the client is located
-	int px = (int)(m_serverInfo->m_position.p.x + (m_environment->m_width / 2.0f)) / m_environment->m_gridUnits;
-	int pz = (int)(m_serverInfo->m_position.p.z + (m_environment->m_height / 2.0f)) / m_environment->m_gridUnits;
+	int px = (int)(m_serverInfo->m_position.p.x + (m_environment->m_width * m_environment->m_primSize / 2.0f)) / (m_environment->m_gridUnits * m_environment->m_primSize);
+	int pz = (int)(m_serverInfo->m_position.p.z + (m_environment->m_height * m_environment->m_primSize / 2.0f)) / (m_environment->m_gridUnits * m_environment->m_primSize);
 
 	CLinkList<CTerrainCollision>* collisions = (CLinkList<CTerrainCollision>*)m_environment->m_collisions->GetElement(2, px, pz);
 

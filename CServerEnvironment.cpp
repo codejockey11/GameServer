@@ -54,8 +54,9 @@ CServerEnvironment::CServerEnvironment(const char* filename)
 	// Number of vertices contained in one grid cube
 	m_gridUnits = 8;
 
+	// +1 for odd shaped terrains
 	m_gridHeight = (m_height / m_gridUnits) + 1;
-	m_gridWidth = (m_width / m_gridUnits) + 1;
+	m_gridWidth = (m_width / m_gridUnits) +1 ;
 
 
 	// These collectable items would be defined in the environment file from the editor or compiler.
@@ -72,8 +73,8 @@ CServerEnvironment::CServerEnvironment(const char* filename)
 
 	// Determine which cube list to add the object.
 	// Would need to test for all the vertices of the models making them contained in each block they belong with.
-	m_px = (int)(collectable->m_position.x + (m_width / 2.0f)) / m_gridUnits;
-	m_pz = (int)(collectable->m_position.z + (m_height / 2.0f)) / m_gridUnits;
+	m_px = (int)(collectable->m_position.x + (m_width * m_primSize / 2.0f)) / (m_gridUnits * m_primSize);
+	m_pz = (int)(collectable->m_position.z + (m_height * m_primSize / 2.0f)) / (m_gridUnits * m_primSize);
 
 	CLinkList<CObject>* cube = (CLinkList<CObject>*)m_collectables->GetElement(2, m_px, m_pz);
 
@@ -94,17 +95,17 @@ CServerEnvironment::CServerEnvironment(const char* filename)
 	m_blueTeamStarts = new CLinkList<CTeamStart>();
 
 	// Not using a heap array for these
-	m_redTeamStarts->Add(new CTeamStart(true, CVertex(-8.0f, 308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 0);
-	m_redTeamStarts->Add(new CTeamStart(true, CVertex(-4.0f, 308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 1);
-	m_redTeamStarts->Add(new CTeamStart(true, CVertex(0.0f, 308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 2);
-	m_redTeamStarts->Add(new CTeamStart(true, CVertex(4.0f, 308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 3);
-	m_redTeamStarts->Add(new CTeamStart(true, CVertex(8.0f, 308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 4);
+	m_redTeamStarts->Add(new CTeamStart(true, CVertex(-8.0f, 1308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 0);
+	m_redTeamStarts->Add(new CTeamStart(true, CVertex(-4.0f, 1308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 1);
+	m_redTeamStarts->Add(new CTeamStart(true, CVertex(0.0f, 1308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 2);
+	m_redTeamStarts->Add(new CTeamStart(true, CVertex(4.0f, 1308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 3);
+	m_redTeamStarts->Add(new CTeamStart(true, CVertex(8.0f, 1308.0f, -8.0f), CVertex(0.0f, 359.0f, 0.0f)), 4);
 
-	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(-8.0f, 308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 0);
-	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(-4.0f, 308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 1);
-	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(0.0f, 308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 2);
-	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(4.0f, 308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 3);
-	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(8.0f, 308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 4);
+	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(-8.0f, 1308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 0);
+	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(-4.0f, 1308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 1);
+	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(0.0f, 1308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 2);
+	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(4.0f, 1308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 3);
+	m_blueTeamStarts->Add(new CTeamStart(true, CVertex(8.0f, 1308.0f, 8.0f), CVertex(0.0f, 180.0f, 0.0f)), 4);
 
 	
 	// Now the collision primitives from the terrain.
@@ -124,8 +125,8 @@ CServerEnvironment::CServerEnvironment(const char* filename)
 		// Simple centroid for the terrain primitives
 		CVertex v = v.Centroid(&collision->m_a, &collision->m_b, &collision->m_c);
 
-		m_px = (int)((v.p.x + ((m_width / 2.0f))) / (m_gridUnits));
-		m_pz = (int)((v.p.z + ((m_height / 2.0f))) / (m_gridUnits));
+		m_px = (int)((v.p.x + ((m_width * m_primSize / 2.0f))) / (m_gridUnits * m_primSize));
+		m_pz = (int)((v.p.z + ((m_height * m_primSize / 2.0f))) / (m_gridUnits * m_primSize));
 
 		CLinkList<CTerrainCollision>* cube = (CLinkList<CTerrainCollision>*)m_collisions->GetElement(2, m_px, m_pz);
 

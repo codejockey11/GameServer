@@ -40,7 +40,7 @@ CServer::CServer()
 	}
 
 	m_timerCountdown = new CTimer(1000);
-	m_countdown = 30;
+	m_countdown = 5;
 
 
 	pFunc[CNetwork::ServerEvent::E_SE_ACCOUNT_INFO] = &CServer_AccountInfo;

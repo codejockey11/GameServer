@@ -711,8 +711,8 @@ void CServer_Activity(CServer* server, CNetwork* network, CServerInfo* serverInf
 
 	// Check if the client collided with a collectable item.
 	// Grab the collectable list for the cube where the client is located.
-	int px = (int)(serverInfo->m_position.p.x + (server->m_serverEnvironment->m_width / 2.0f)) / server->m_serverEnvironment->m_gridUnits;
-	int pz = (int)(serverInfo->m_position.p.z + (server->m_serverEnvironment->m_height / 2.0f)) / server->m_serverEnvironment->m_gridUnits;
+	int px = (int)(serverInfo->m_position.p.x + (server->m_serverEnvironment->m_width * server->m_serverEnvironment->m_primSize / 2.0f)) / (server->m_serverEnvironment->m_gridUnits * server->m_serverEnvironment->m_primSize);
+	int pz = (int)(serverInfo->m_position.p.z + (server->m_serverEnvironment->m_height * server->m_serverEnvironment->m_primSize / 2.0f)) / (server->m_serverEnvironment->m_gridUnits * server->m_serverEnvironment->m_primSize);
 
 	CLinkList<CObject>* collectables = (CLinkList<CObject>*)server->m_serverEnvironment->m_collectables->GetElement(2, px, pz);
 
@@ -730,9 +730,7 @@ void CServer_Activity(CServer* server, CNetwork* network, CServerInfo* serverInf
 				{
 					CVertex p = serverInfo->m_position - CVertex(collectable->m_object->m_position.x, collectable->m_object->m_position.y, collectable->m_object->m_position.z);
 
-					float l = p.Length();
-
-					if (fabs(l) <= 4.0f)
+					if (fabs(p.Length()) <= 4.0f)
 					{
 						collectable->m_object->m_limboTimer->Start();
 
